@@ -2,6 +2,8 @@ import React from "react"
 import { graphql, StaticQuery } from "gatsby"
 import styled from "styled-components"
 
+import SiteLogo from "./logo"
+
 const SiteInfoWrapper = styled.div`
   flex-glow: 1;
   color: white;
@@ -10,10 +12,6 @@ const SiteInfoWrapper = styled.div`
 `
 const SiteTitle = styled.div`
   font-weight: bold;
-`
-
-const SiteLogo = styled.img`
-  max-width: 25%;
 `
 
 const SiteInfo = () => (
@@ -28,24 +26,11 @@ const SiteInfo = () => (
             }
           }
         }
-
-        allWordpressWpLogo {
-          edges {
-            node {
-              url {
-                source_url
-              }
-            }
-          }
-        }
       }
     `}
     render={props => (
       <SiteInfoWrapper>
-        <SiteLogo
-          src={props.allWordpressWpLogo.edges[0].node.url.source_url}
-          alt="Site Logo"
-        />
+        <SiteLogo />
         <SiteTitle>
           <div
             dangerouslySetInnerHTML={{

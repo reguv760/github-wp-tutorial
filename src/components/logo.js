@@ -1,12 +1,16 @@
 import React from "react"
-import Helmet from "react-helmet"
 import { graphql, StaticQuery } from "gatsby"
+import styled from "styled-components"
 
-const favIcon = () => (
+const SiteLogoStyle = styled.img`
+  max-width: 15%;
+`
+
+const Logo = () => (
   <StaticQuery
     query={graphql`
       {
-        allWordpressWpFavicon {
+        allWordpressWpLogo {
           edges {
             node {
               url {
@@ -18,15 +22,12 @@ const favIcon = () => (
       }
     `}
     render={props => (
-      <Helmet>
-        <link
-          rel="icon"
-          type="image/png"
-          href={props.allWordpressWpFavicon.edges[0].node.url.source_url}
-        ></link>
-      </Helmet>
+      <SiteLogoStyle
+        src={props.allWordpressWpLogo.edges[0].node.url.source_url}
+        alt="Logo"
+      />
     )}
   />
 )
 
-export default favIcon
+export default Logo
