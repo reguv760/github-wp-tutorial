@@ -11,10 +11,8 @@ import styled, { createGlobalStyle } from "styled-components"
 import { graphql, StaticQuery } from "gatsby"
 import MainMenu from "./MainMenu"
 
-//import FavIcon from "./favIcon"
-
 const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
   
   body { 
     font-family: 'Open Sans', sans-serif;
