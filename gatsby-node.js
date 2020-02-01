@@ -93,7 +93,7 @@ exports.createPages = ({ graphql, actions }) => {
       })
       // ==== END PAGES ====
 
-      // ==== POSTS (WORDPRESS NATIVE AND ACF) ====
+      // ==== PORTFOLIO (WORDPRESS NATIVE AND ACF) ====
       .then(() => {
         graphql(
           `
@@ -134,9 +134,76 @@ exports.createPages = ({ graphql, actions }) => {
               context: edge.node,
             })
           })
+        })
+      })
+      // ==== END PORTFOLIO ====
+      // ==== BLOG POSTS ====
+
+      .then(() => {
+        graphql(`
+          {
+            allWordpressPost {
+              edges {
+                node {
+                  title
+                  excerpt
+                  wordpress_id
+                  date(formatString: "Do MMM YYYY HH:mm")
+                  content
+                  slug
+                }
+              }
+            }
+          }
+        `).then(result => {
+          if (result.errors) {
+            console.log(result.errors)
+            reject(result.errors)
+          }
+
+          const posts = result.data.allWordpressPost.edges
+          const postsPerPage = 2
+          const numberOfPages = Math.ceil(posts.length / postsPerPage)
+
+          const blogPlostListTemplate = path.resolve(
+            "./src/templates/blogPostList.js"
+          )
+          // ===PAGINATION LOGIC===
+          //create array based on numberOfPages
+          //path logic is based on if index === 0, then path is /blog,
+          //if not, then the path is /blog/${index + 1}
+
+          //individual posts are created based on slicing posts array
+          //based on index and postsPerPage
+          //then define paths for createPage based on number of blog posts available
+          Array.from({ length: numberOfPages }).forEach((page, index) => {
+            createPage({
+              component: slash(blogPlostListTemplate),
+              path: index === 0 ? "/blog" : `/blog/${index + 1}`,
+              context: {
+                posts: posts.slice(
+                  index * postsPerPage,
+                  index * postsPerPage + postsPerPage
+                ),
+                numberOfPages,
+                currentPage: index + 1,
+              },
+            })
+          })
+
+          //after posts and pages are parsed,
+          //create individual page for each post
+          const pageTemplate = path.resolve("./src/templates/page.js")
+          _.each(posts, post => {
+            createPage({
+              path: `/post/${post.node.slug}`,
+              component: slash(pageTemplate),
+              context: post.node,
+            })
+          })
+
           resolve()
         })
       })
-    // ==== END POSTS ====
   })
 }
